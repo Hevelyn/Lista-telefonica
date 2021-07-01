@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="listaTelefonica">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Telefonica</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="lib/angular/angular.js"></script>
+
+    <script>
+        angular.module("listaTelefonica", []);
+        angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope) {
+            $scope.app ="Lista Telefonica",
+            $scope.contatos = [
+                {nome: "Pedro", telefone: "99999999"},
+                {nome: "Thais", telefone: "99889999"},
+                {nome: "Lucas", telefone: "77779999"},
+            ];
+            $scope.operadoras = [
+                {nome: "Nextel", codigoc: "99"},
+                {nome: "Vivo", codigoc: "15"},
+                {nome: "Tim", codigoc: "41"},
+            ]
+            $scope.adicionarContato = function (contato) {
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato;
+            };
+            $scope.apagarContato = function (contatos) {
+                // var constatosSelecionados => Adicionar a array quando clicar no botão apagarContato e o contato permanecer
+               $scope.contatos = contatos.filter(function (contato) {
+                    if (!contato.selecionado) return contato;
+                });
+                // console.log(constatosSelecionados);
+            };
+        });
+    </script>
+</head>
+<body ng-controller="listaTelefonicaCtrl">
+    <div class="jumbotron">
+        <h3>{{app}}</h3>  <!-- <h4 ng-bind="app"></h4> / Outra forma de fazer o ng-bind-->
+        <table class="table">
+            <tr>
+                <th></th>
+                <th> Nome</th>
+                <th> Telefone</th>
+                <th>Operadora</th>
+            </tr>
+
+            <tr ng-class="{'selecionado': contato.selecionado}" ng-repeat="contato in contatos">
+                <td><input type="checkbox" ng-model="contato.selecionado"/></td>
+                <td>{{contato.nome}}</td>
+                <td>{{contato.telefone}}</td>
+                <td>{{contato.operadora.nome}}</td>
+
+                <!-- </td> <td ng-repeat="(key, value) in contato">
+                    {{key + ' - ' + value}}
+                </td> Outra forma de add o -->
+            </tr>
+        </table>
+        <hr/>
+        
+        <input class="form-control" type="text" ng-model="contato.nome" placeholder="nome"/>
+        <input class="form-control" type="text" ng-model="contato.telefone" placeholder="telefone"/>
+        <select class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
+        <option value="">Selecione a operadora</option>
+        </select>
+        <button class="btn btn-primary" ng-click="adicionarContato(contato)" 
+        ng-disabled="!contato.telefone || !contato.telefone"> Adicionar Contato</button>
+        <button class="btn btn-danger" ng-click="apagarContato(contatos)"> Apagar Contato</button>
+    </div>
+    <!-- <div>Hevelyn Soares</div>
+    <div ng-include="'footer.html'"></div>  No Chrome não funciona-->
+</body>
+</html>
